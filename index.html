@@ -1,81 +1,297 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>سجل درجات الإنجاز العالمي - علي أحمد</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            padding: 40px;
-        }
-        .gradebook-card {
-            background: white;
-            width: 100%;
-            max-width: 600px;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .logo { width: 100px; margin-bottom: 20px; }
-        h1 { color: #333; font-size: 28px; margin-bottom: 10px; }
-        h2 { color: #555; font-size: 22px; margin-bottom: 5px; }
-        .user-id { color: #888; margin-bottom: 20px; }
-        .result-section {
-            border-top: 1px solid #eee;
-            margin-top: 30px;
-            padding-top: 20px;
-        }
-        .result-title {
-            font-size: 20px;
-            color: #444;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        .status-badge {
-            background-color: #d1fae5;
-            color: #065f46;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            display: inline-block;
-            border: 1px solid #10b981;
-        }
-        .global-rank {
-            margin-top: 15px;
-            color: #007bff;
-            font-weight: bold;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volt IEEE Paper</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'EB Garamond', 'Times New Roman', serif;
+    font-size: 10pt;
+    background: #f5f5f0;
+    color: #111;
+    line-height: 1.45;
+  }
+  .page {
+    max-width: 750px;
+    margin: 30px auto;
+    background: #fff;
+    padding: 72px 72px 80px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  }
+  .header-bar {
+    border-bottom: 1px solid #000;
+    padding-bottom: 5px;
+    margin-bottom: 18px;
+    text-align: center;
+    font-size: 8.5pt;
+    font-style: italic;
+    color: #444;
+  }
+  h1.paper-title {
+    font-size: 17pt;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.25;
+    margin-bottom: 14px;
+  }
+  .authors {
+    text-align: center;
+    margin-bottom: 4px;
+    font-size: 10pt;
+    font-weight: 700;
+  }
+  .affil {
+    text-align: center;
+    font-style: italic;
+    font-size: 9pt;
+    color: #444;
+    margin-bottom: 3px;
+  }
+  .abstract-block {
+    margin: 18px 30px 0;
+    font-size: 9pt;
+    text-align: justify;
+    line-height: 1.4;
+  }
+  .abstract-title {
+    font-weight: 700;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 6px;
+    font-size: 10pt;
+  }
+  .keywords {
+    font-style: italic;
+    margin-top: 7px;
+    font-size: 9pt;
+  }
+  .divider { border: none; border-top: 1px solid #000; margin: 18px 0; }
+  .section-title {
+    font-size: 10pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 14px 0 6px;
+    letter-spacing: 0.03em;
+  }
+  .sub-title {
+    font-weight: 700;
+    font-style: italic;
+    margin: 10px 0 4px;
+    font-size: 10pt;
+  }
+  p { text-align: justify; margin-bottom: 6px; text-indent: 1.5em; }
+  p.noindent { text-indent: 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin: 8px 0;
+  }
+  th {
+    background: #ddd;
+    border: 1px solid #000;
+    padding: 4px 7px;
+    font-weight: 700;
+    text-align: center;
+  }
+  td {
+    border: 1px solid #000;
+    padding: 4px 7px;
+    vertical-align: top;
+  }
+  td.center { text-align: center; }
+  .table-caption {
+    text-align: center;
+    font-weight: 700;
+    font-size: 9pt;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    letter-spacing: 0.04em;
+  }
+  .kw-row { display: flex; gap: 0; }
+  .kw-cell {
+    flex: 1;
+    border: none;
+    text-align: center;
+    font-size: 9pt;
+    padding: 3px 4px;
+    background: #f9f9f9;
+    border-right: 1px solid #ccc;
+  }
+  .kw-cell:last-child { border-right: none; }
+  .kw-wrap {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 6px 0 10px;
+  }
+  code {
+    font-family: 'Courier New', monospace;
+    font-size: 8.5pt;
+    background: #f4f4f4;
+    padding: 0 3px;
+    border-radius: 2px;
+  }
+  ol.steps { margin: 6px 0 6px 2em; }
+  ol.steps li { margin-bottom: 4px; text-align: justify; }
+  .references p {
+    text-indent: 0;
+    padding-left: 2em;
+    text-indent: -2em;
+    margin-bottom: 4px;
+    font-size: 9pt;
+  }
+  .footer-bar {
+    border-top: 1px solid #000;
+    padding-top: 5px;
+    margin-top: 24px;
+    text-align: center;
+    font-size: 8pt;
+    color: #555;
+  }
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; margin: 0; padding: 1in; }
+  }
+</style>
 </head>
 <body>
+<div class="page">
 
-<div class="gradebook-card">
-    
-    
-    <h1>سجل درجات علي أحمد-د</h1>
-    <h2>حساب edX: 2501230089</h2>
-    <p class="user-id">الرقم الأكاديمي الموحد</p>
+  
+  <h1 class="paper-title">Volt: A Ternary-Keyword Programming Language<br>for High-Performance Backend Systems</h1>
 
-    <div class="result-section">
-        <div class="result-title">النتيجة النهائية</div>
-        <div class="status-badge">
-             ناجح في الامتحان العالمي للبرمجة بلغة سكراتش
-        </div>
-        <div class="global-rank">
-            التصنيف العالمي المحقق: المركز السادس (#6) عالمياً
-        </div>
+  <div class="authors">Ali Ahmed Abdul Hussein Zarki</div>
+  <div class="affil">Lead Architect, Volt Language Core</div>
+  <div class="affil">ialidev &nbsp;|&nbsp; GitHub: Volt-Language &nbsp;|&nbsp; 2026</div>
+
+  <div class="abstract-block">
+    <div class="abstract-title">Abstract</div>
+    This paper presents Volt, a novel compiled programming language designed for backend software development. Volt enforces a strict ternary-keyword constraint: every reserved keyword and built-in command consists of exactly three characters. The language transpiles to intermediate C++ code, subsequently compiled to native machine code via clang++. This design philosophy reduces cognitive load while preserving the execution speed and memory efficiency of C++. We describe the language architecture, transpilation pipeline, type system, and 15 built-in libraries. Experimental results confirm successful compilation and execution of backend applications including authentication systems and microservice endpoints on Android (Termux) and Linux.
+    <div class="keywords"><em>Keywords</em>—programming language design; domain-specific language; compiler; transpiler; backend development; ternary syntax; C++; clang++</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- I. INTRODUCTION -->
+  <div class="section-title">I. Introduction</div>
+  <p>The growing complexity of backend systems demands tools that balance developer ergonomics with runtime efficiency. Python offers readable syntax but incurs significant runtime overhead. C++ provides near-hardware performance but requires verbose, error-prone code.</p>
+  <p>Volt addresses this trade-off through a novel constraint: all language primitives are exactly three characters long. This ternary-keyword paradigm reduces keystrokes and visual noise while uniform length simplifies lexical analysis. Volt source files (<code>.vl</code>) are transpiled to C++ and compiled to native binaries using clang++, running on Android (Termux) and Linux platforms.</p>
+  <p>The language has been under active development for three years and is available as the open-source Volt-Language repository on GitHub. This paper provides the first formal description of Volt's design rationale, syntax specification, compilation pipeline, and experimental evaluation.</p>
+
+  <!-- II. RELATED WORK -->
+  <div class="section-title">II. Related Work</div>
+  <p>Several efforts have explored constrained programming language design. APL [1] demonstrated that compact operators could express complex array computations. Brainfuck [2] established the theoretical minimum for Turing-completeness. Lua [3] was designed for embedding with a small core vocabulary. Unlike these, Volt targets production backend deployment with a readability-first constraint that is industrially motivated.</p>
+  <p>Transpilation-based languages such as TypeScript [4] and CoffeeScript [5] show that targeting a lower-level IR is a viable strategy. Volt extends this pattern by using C++ as its IR, inheriting the full optimization potential of modern C++ compilers and the LLVM backend through clang++.</p>
+
+  <!-- III. LANGUAGE DESIGN -->
+  <div class="section-title">III. Language Design</div>
+
+  <div class="sub-title">A. The Ternary-Keyword Constraint</div>
+  <p>The defining property of Volt is that every reserved word is exactly three ASCII characters. Table I enumerates the core keywords. This constraint was chosen for three reasons: (1) uniform token length simplifies the lexer; (2) short keywords reduce per-line character count; (3) the constraint forces deliberate, minimal vocabulary design.</p>
+
+  <div class="table-caption">Table I. &nbsp; Volt Core Keywords</div>
+  <div class="kw-wrap">
+    <div class="kw-row">
+      <div class="kw-cell"><code>out</code></div>
+      <div class="kw-cell"><code>inp</code></div>
+      <div class="kw-cell"><code>ifs / elf / els</code></div>
+      <div class="kw-cell"><code>lop</code></div>
+      <div class="kw-cell"><code>flt / str / int</code></div>
+      <div class="kw-cell"><code>ext</code></div>
     </div>
+  </div>
 
-    <p style="margin-top: 30px; font-size: 0.9rem; color: #777;">
-        تم التحقق من هذه النتيجة بناءً على المعايير الدولية لبرمجة الخوارزميات.
-    </p>
+  <div class="sub-title">B. Syntax Specification</div>
+  <p>Volt adopts Python-style indentation for block structure, eliminating braces. Each statement begins with a three-character keyword followed by operands. Table II provides a comprehensive mapping between Volt constructs and their C++ equivalents.</p>
+
+  <div class="table-caption">Table II. &nbsp; Volt–C++ Syntax Mapping</div>
+  <table>
+    <tr><th>Keyword</th><th>Volt Syntax</th><th>C++ Equivalent</th><th>Function</th></tr>
+    <tr><td class="center"><code>out</code></td><td><code>out "Hello World"</code></td><td><code>std::cout&lt;&lt;...&lt;&lt;endl;</code></td><td>Print output</td></tr>
+    <tr><td class="center"><code>inp</code></td><td><code>inp "Prompt": var</code></td><td><code>cout&lt;&lt;...;cin&gt;&gt;...;</code></td><td>Read input</td></tr>
+    <tr><td class="center"><code>ifs</code></td><td><code>ifs status == 1:</code></td><td><code>if (status == 1) {</code></td><td>If condition</td></tr>
+    <tr><td class="center"><code>elf</code></td><td><code>elf status == 0:</code></td><td><code>} else if (...) {</code></td><td>Else-if branch</td></tr>
+    <tr><td class="center"><code>els</code></td><td><code>els:</code></td><td><code>} else {</code></td><td>Else branch</td></tr>
+    <tr><td class="center"><code>lop</code></td><td><code>lop 5:</code></td><td><code>for(int i=0;i&lt;5;++i){</code></td><td>Fixed loop</td></tr>
+    <tr><td class="center"><code>ext</code></td><td><code>ext</code></td><td><code>return 0;</code></td><td>Exit program</td></tr>
+    <tr><td class="center"><code>flt</code></td><td><code>flt x = 3.14</code></td><td><code>float x = 3.14;</code></td><td>Float variable</td></tr>
+    <tr><td class="center"><code>str</code></td><td><code>str n = "Ali"</code></td><td><code>string n="Ali";</code></td><td>String variable</td></tr>
+    <tr><td class="center"><code>int</code></td><td><code>int n = 42</code></td><td><code>int n = 42;</code></td><td>Integer variable</td></tr>
+  </table>
+
+  <div class="sub-title">C. Type System</div>
+  <p>Volt uses explicit three-character type prefixes: <code>int</code> (integer), <code>flt</code> (floating-point), <code>str</code> (string), and <code>bol</code> (boolean). Type safety is enforced at transpilation time; the generated C++ code carries full RAII and type-checking semantics.</p>
+
+  <div class="sub-title">D. Built-in Libraries</div>
+  <p>Volt ships with 15 built-in libraries covering: networking (<code>net</code>, <code>srv</code>), file I/O (<code>fil</code>), JSON processing (<code>jsn</code>), cryptographic hashing (<code>cpt</code>), HTTP client (<code>htp</code>), process management (<code>prc</code>), timer/scheduling (<code>tmr</code>), math utilities (<code>mth</code>), string manipulation (<code>smt</code>), logging (<code>log</code>), database connectors (<code>dbs</code>), environment variables (<code>env</code>), regular expressions (<code>rgx</code>), and standard collections (<code>col</code>).</p>
+
+  <!-- IV. COMPILATION PIPELINE -->
+  <div class="section-title">IV. Compilation Pipeline</div>
+  <p class="noindent">The Volt compilation pipeline comprises four stages implemented in the Python-based <code>volt.py</code> compiler:</p>
+  <ol class="steps">
+    <li><strong>Lexical Analysis:</strong> The lexer tokenizes the <code>.vl</code> source file, recognizing three-character keywords, literals, and identifiers.</li>
+    <li><strong>Parsing &amp; AST Construction:</strong> A recursive-descent parser builds an Abstract Syntax Tree. Syntax errors are reported with line-level diagnostics.</li>
+    <li><strong>C++ Code Generation:</strong> The code generator traverses the AST and emits equivalent C++ constructs including includes, <code>main()</code> scaffolding, and type declarations.</li>
+    <li><strong>Native Compilation:</strong> The generated C++ file is passed to <code>clang++</code> to produce an optimized native binary.</li>
+  </ol>
+  <p>The pipeline is invoked as: <code>python volt.py &amp;&amp; ./volt_app</code>. On success the compiler emits <em>"[Volt Success] Hardwired binary generated successfully."</em> The intermediate C++ file is retained for inspection, aiding debugging and educational use.</p>
+
+  <!-- V. EXPERIMENTAL EVALUATION -->
+  <div class="section-title">V. Experimental Evaluation</div>
+
+  <div class="sub-title">A. Test Environment</div>
+  <p>Experiments were conducted on Android with Termux (Python 3.13.1, clang 21.1.8-2, git 2.54.0). The test suite comprised four categories: (1) authentication microservices, (2) network stress-test servers, (3) hardware monitoring daemons, and (4) security gateway services.</p>
+
+  <div class="sub-title">B. Compilation Success Rate</div>
+  <p>All syntactically correct <code>.vl</code> programs compiled successfully to native binaries. Error detection was validated by intentionally introducing Python-style <code>print</code> statements into Volt source files; the compiler correctly rejected these with <em>"[Volt Error] Compilation failed"</em> and a descriptive diagnostic, confirming robust syntax enforcement.</p>
+
+  <div class="sub-title">C. Runtime Behavior</div>
+  <p>Compiled binaries initialized microservices on ports 443, 1337, 8080, 8090, and 9999, and processed I/O correctly. Interactive programs accepted keyboard input and produced correct conditional branches, validating <code>inp</code> and <code>ifs/elf/els</code> constructs. Loop constructs (<code>lop</code>) executed the correct iteration count in all test cases.</p>
+
+  <div class="sub-title">D. Language Comparison</div>
+  <p>Table III presents a qualitative comparison of Volt against Python and C++ across six dimensions relevant to backend development.</p>
+
+  <div class="table-caption">Table III. &nbsp; Comparative Feature Analysis</div>
+  <table>
+    <tr><th>Feature</th><th>Volt</th><th>Python</th><th>C++</th></tr>
+    <tr><td>Syntax brevity</td><td>3-char keywords</td><td>English words</td><td>Verbose</td></tr>
+    <tr><td>Compilation</td><td>Transpile to C++</td><td>Interpreted</td><td>Direct compile</td></tr>
+    <tr><td>Backend ready</td><td>Yes (microsvcs)</td><td>Yes (Flask etc.)</td><td>Yes</td></tr>
+    <tr><td>Memory control</td><td>Via C++ output</td><td>No</td><td>Full control</td></tr>
+    <tr><td>Learning curve</td><td>Very low</td><td>Low</td><td>High</td></tr>
+    <tr><td>Binary output</td><td>Native (clang++)</td><td>No</td><td>Native</td></tr>
+  </table>
+
+  <!-- VI. DISCUSSION -->
+  <div class="section-title">VI. Discussion</div>
+  <p>The ternary-keyword constraint introduces both advantages and challenges. Volt programs are measurably shorter in reserved-word character count. The transpilation-to-C++ strategy means Volt inherits decades of compiler optimization research at no additional implementation cost.</p>
+  <p>A limitation is that three-character identifiers may reduce mnemonic clarity for newcomers. Future work will address this through an integrated Language Server Protocol (LSP) providing hover documentation and auto-completion. Additionally, a formal grammar (BNF/EBNF) and quantitative performance benchmarks comparing Volt binary throughput against equivalent Python and C++ programs are planned for the next release cycle.</p>
+
+  <!-- VII. CONCLUSION -->
+  <div class="section-title">VII. Conclusion</div>
+  <p>This paper introduced Volt, a transpiled programming language for backend development governed by a strict ternary-keyword convention. The language demonstrates that meaningful backend software can be expressed with a minimal, uniform-length vocabulary while achieving native binary performance via a C++ transpilation target. The open-source implementation, available on GitHub as Volt-Language, compiles and executes successfully on Android and Linux. Future work will focus on formal benchmarking, IDE integration, and standard library expansion.</p>
+
+  <!-- ACKNOWLEDGMENT -->
+  <div class="section-title">Acknowledgment</div>
+  <p>The author thanks the open-source community for contributions to the Termux ecosystem (Python, clang, git) that enabled mobile-native compiler development.</p>
+
+  <!-- REFERENCES -->
+  <div class="section-title">References</div>
+  <div class="references">
+    <p>[1] K. E. Iverson, "A Programming Language," Wiley, New York, 1962.</p>
+    <p>[2] U. Muller, "Brainfuck: An Eight-Instruction Turing-Complete Language," 1993.</p>
+    <p>[3] R. Ierusalimschy, L. H. de Figueiredo, and W. Celes, "Lua 5.4 Reference Manual," PUC-Rio, 2020.</p>
+    <p>[4] A. Hejlsberg et al., "TypeScript Language Specification," Microsoft, 2012.</p>
+    <p>[5] J. Ashkenas, "CoffeeScript: Unfancy JavaScript," 2009. [Online]. Available: https://coffeescript.org</p>
+    <p>[6] A. A. A. H. Zarki, "Volt Language Core Documentation," GitHub, 2026. [Online]. Available: https://github.com/ialidev/Volt-Language</p>
+  </div>
+
+  
+
 </div>
-
 </body>
 </html>
