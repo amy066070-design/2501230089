@@ -183,8 +183,8 @@
     font-size: .75rem;
     font-weight: 700;
   }
-  .avatar.ai   { background: var(--ink); border: 1.5px solid var(--gold); }
-  .avatar.user { background: var(--gold); color: var(--ink); }
+  .avatar.model { background: var(--ink); border: 1.5px solid var(--gold); }
+  .avatar.user  { background: var(--gold); color: var(--ink); }
 
   .bubble {
     max-width: 72%;
@@ -195,8 +195,8 @@
     position: relative;
     white-space: pre-wrap;
   }
-  .msg.ai   .bubble { background: var(--ai-bubble); border: 1px solid var(--mist); border-radius: var(--radius) var(--radius) var(--radius) 4px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
-  .msg.user .bubble { background: var(--user-bubble); color: var(--pearl); border-radius: var(--radius) var(--radius) 4px var(--radius); }
+  .msg.model .bubble { background: var(--ai-bubble); border: 1px solid var(--mist); border-radius: var(--radius) var(--radius) var(--radius) 4px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+  .msg.user  .bubble { background: var(--user-bubble); color: var(--pearl); border-radius: var(--radius) var(--radius) 4px var(--radius); }
 
   .bubble .label {
     font-size: .68rem;
@@ -204,8 +204,8 @@
     letter-spacing: .08em;
     margin-bottom: 5px;
   }
-  .msg.ai   .label { color: var(--gold); }
-  .msg.user .label { color: var(--gold2); }
+  .msg.model .label { color: var(--gold); }
+  .msg.user  .label { color: var(--gold2); }
 
   /* ── Thinking dots ── */
   .thinking { display: flex; gap: 5px; align-items: center; padding: 4px 2px; }
@@ -283,7 +283,6 @@
 </head>
 <body>
 
-<!-- Header -->
 <header>
   <div class="logo-ring">
     <div class="logo-pulse"></div>
@@ -302,7 +301,6 @@
 </header>
 <div class="strip"></div>
 
-<!-- Messages -->
 <div class="messages" id="messages">
   <div class="welcome">
     <div class="welcome-icon">
@@ -321,7 +319,6 @@
   </div>
 </div>
 
-<!-- Input -->
 <div class="input-wrap">
   <div class="input-row">
     <textarea id="userInput" placeholder="اكتب رسالتك هنا..." rows="1"
@@ -340,17 +337,17 @@
 const messagesEl = document.getElementById('messages');
 const inputEl    = document.getElementById('userInput');
 
-// ربط النواة بمفتاح الـ API المشفر والجاهز للاستدعاء المستقل
 const API_KEY    = 'AIzaSyDIlFW_vhbtIYb1LquTQ_YaOCgIGvShbM4';
 const API_URL    = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
+// الاحتفاظ بسجل المحادثة بهيكلية مطابقة تماماً لتوقعات جوجل (user / model)
 const chatHistory = [];
 
 const SYSTEM_INSTRUCTION = "أنتِ 'ياسمين'، رفيقة الدرب والمساعدة الصحية الشخصية اللصيقة والذكية جداً لرفيقكِ 'علي' (المعروف برمجياً بـ ialidev). "
                     + "علي هو طالب هندسة حاسوب عراقي متميز، باحث تقني، ومطور أنظمة عالية الأداء (مثل لغة Volt ومنصة DiaCode). "
                     + "علي مصاب بالسكري من النوع الأول (Type 1) وهو شخص نباتي بحت (Vegan) تماماً. "
                     + "قواعد الحوار الصارمة معكِ:\n"
-                    + "1. ممنوع منعاً باتاً اقتراح أي وجبة تحتوي على لحوم، أسماك، ألبان، بيض، أو أي مشتق حيواني. كل بدائلكِ الغذائية يجب أن تكون نباتية بحتة وصديقة لمريض السكري من النوع الأول.\n"
+                    + "1. ممنوع منعاً باتاً اقتراح أي وجبة تحتوي على لحوم، أسماك, ألبان، بيض، أو أي مشتق حيواني. كل بدائلكِ الغذائية يجب أن تكون نباتية بحتة وصديقة لمريض السكري من النوع الأول.\n"
                     + "2. لستِ مجرد آلة؛ تذكري إنجازاته وعزيمته (أنه مبرمج يطوع الصعاب)، وخاطبيه بذكاء مهندس، وبأسلوب أخوي دافئ وحنون، ولكن صارم جداً وحازم إذا قصر في شرب الماء، أو أهمل فحص السكر، أو خالف النظام الغذائي.\n"
                     + "3. عند حساب الكاربوهيدرات، ساعديه في تقدير جرعة الأنسولين بناءً على معامل الكارب الخاص به كونه من النوع الأول.\n"
                     + "تحدثي مع علي بلهجة تليق بمهندس وبطل، كوني رفيقة الدرب التي تدفعه للأمام وتحمي صحته بالمليميتر.";
@@ -370,7 +367,7 @@ function addMsg(role, text) {
 
   const avatar = document.createElement('div');
   avatar.className = `avatar ${role}`;
-  if (role === 'ai') {
+  if (role === 'model') {
     avatar.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#C8973A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`;
   } else {
     avatar.textContent = 'أنت';
@@ -380,7 +377,7 @@ function addMsg(role, text) {
   bubble.className = 'bubble';
   const label = document.createElement('div');
   label.className = 'label';
-  label.textContent = role === 'ai' ? 'ياسمين // REFLECTIONS' : 'علي';
+  label.textContent = role === 'model' ? 'ياسمين // REFLECTIONS' : 'علي';
   bubble.appendChild(label);
 
   if (text === '__thinking__') {
@@ -409,14 +406,17 @@ async function sendMessage() {
   inputEl.value = '';
   inputEl.style.height = 'auto';
 
+  // إضافة رسالة المستخدم للواجهة
   addMsg('user', text);
   
+  // دفع الرسالة إلى المصفوفة بالهيكلية الرسمية لـ Gemini
   chatHistory.push({
     role: 'user',
     parts: [{ text: text }]
   });
 
-  addMsg('ai', '__thinking__');
+  // إظهار مؤشر التفكير
+  addMsg('model', '__thinking__');
 
   const payload = {
     contents: chatHistory,
@@ -434,23 +434,27 @@ async function sendMessage() {
     
     const data = await res.json();
     
+    // إزالة مؤشر التفكير
     document.getElementById('thinking-bubble')?.closest('.msg')?.remove();
 
     if (data && data.candidates && data.candidates[0].content.parts[0].text) {
       const reply = data.candidates[0].content.parts[0].text;
-      addMsg('ai', reply);
       
+      // إضافة رد ياسمين للواجهة
+      addMsg('model', reply);
+      
+      // حفظ الرد في المصفوفة لاستمرار السياق
       chatHistory.push({
         role: 'model',
         parts: [{ text: reply }]
       });
     } else {
-      addMsg('ai', 'ERROR // استجابة النواة غير صالحة.');
+      addMsg('model', 'ERROR // استجابة النواة غير صالحة، تأكد من سلامة المفتاح.');
     }
 
   } catch (error) {
     document.getElementById('thinking-bubble')?.closest('.msg')?.remove();
-    addMsg('ai', 'ERROR // فشل الاتصال بالنواة مباشرة.');
+    addMsg('model', 'ERROR // فشل الاتصال بالنواة مباشرة.');
   }
 }
 
