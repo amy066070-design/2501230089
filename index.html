@@ -1,297 +1,467 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Volt IEEE Paper</title>
+<title>YASMIN // CORE V1.5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap');
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ink:    #0D0D0F;
+    --pearl:  #F7F5F0;
+    --gold:   #C8973A;
+    --gold2:  #E8B94A;
+    --mist:   #EAE7E0;
+    --smoke:  #7A7570;
+    --user-bubble: #1A1A20;
+    --ai-bubble:   #FFFFFF;
+    --radius: 20px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
-    font-family: 'EB Garamond', 'Times New Roman', serif;
-    font-size: 10pt;
-    background: #f5f5f0;
-    color: #111;
-    line-height: 1.45;
-  }
-  .page {
-    max-width: 750px;
-    margin: 30px auto;
-    background: #fff;
-    padding: 72px 72px 80px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
-  }
-  .header-bar {
-    border-bottom: 1px solid #000;
-    padding-bottom: 5px;
-    margin-bottom: 18px;
-    text-align: center;
-    font-size: 8.5pt;
-    font-style: italic;
-    color: #444;
-  }
-  h1.paper-title {
-    font-size: 17pt;
-    font-weight: 700;
-    text-align: center;
-    line-height: 1.25;
-    margin-bottom: 14px;
-  }
-  .authors {
-    text-align: center;
-    margin-bottom: 4px;
-    font-size: 10pt;
-    font-weight: 700;
-  }
-  .affil {
-    text-align: center;
-    font-style: italic;
-    font-size: 9pt;
-    color: #444;
-    margin-bottom: 3px;
-  }
-  .abstract-block {
-    margin: 18px 30px 0;
-    font-size: 9pt;
-    text-align: justify;
-    line-height: 1.4;
-  }
-  .abstract-title {
-    font-weight: 700;
-    font-style: italic;
-    text-align: center;
-    margin-bottom: 6px;
-    font-size: 10pt;
-  }
-  .keywords {
-    font-style: italic;
-    margin-top: 7px;
-    font-size: 9pt;
-  }
-  .divider { border: none; border-top: 1px solid #000; margin: 18px 0; }
-  .section-title {
-    font-size: 10pt;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin: 14px 0 6px;
-    letter-spacing: 0.03em;
-  }
-  .sub-title {
-    font-weight: 700;
-    font-style: italic;
-    margin: 10px 0 4px;
-    font-size: 10pt;
-  }
-  p { text-align: justify; margin-bottom: 6px; text-indent: 1.5em; }
-  p.noindent { text-indent: 0; }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 9pt;
-    margin: 8px 0;
-  }
-  th {
-    background: #ddd;
-    border: 1px solid #000;
-    padding: 4px 7px;
-    font-weight: 700;
-    text-align: center;
-  }
-  td {
-    border: 1px solid #000;
-    padding: 4px 7px;
-    vertical-align: top;
-  }
-  td.center { text-align: center; }
-  .table-caption {
-    text-align: center;
-    font-weight: 700;
-    font-size: 9pt;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-    letter-spacing: 0.04em;
-  }
-  .kw-row { display: flex; gap: 0; }
-  .kw-cell {
-    flex: 1;
-    border: none;
-    text-align: center;
-    font-size: 9pt;
-    padding: 3px 4px;
-    background: #f9f9f9;
-    border-right: 1px solid #ccc;
-  }
-  .kw-cell:last-child { border-right: none; }
-  .kw-wrap {
-    border: 1px solid #ccc;
-    border-radius: 3px;
+    font-family: 'Tajawal', sans-serif;
+    background: var(--pearl);
+    color: var(--ink);
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-    margin: 6px 0 10px;
   }
-  code {
-    font-family: 'Courier New', monospace;
-    font-size: 8.5pt;
-    background: #f4f4f4;
-    padding: 0 3px;
-    border-radius: 2px;
+
+  /* ── Header ── */
+  header {
+    background: var(--ink);
+    color: var(--pearl);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
   }
-  ol.steps { margin: 6px 0 6px 2em; }
-  ol.steps li { margin-bottom: 4px; text-align: justify; }
-  .references p {
-    text-indent: 0;
-    padding-left: 2em;
-    text-indent: -2em;
-    margin-bottom: 4px;
-    font-size: 9pt;
+  header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 140% at 90% 50%, rgba(200,151,58,.18) 0%, transparent 70%);
+    pointer-events: none;
   }
-  .footer-bar {
-    border-top: 1px solid #000;
-    padding-top: 5px;
-    margin-top: 24px;
+  .logo-ring {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .logo-ring svg { width: 22px; height: 22px; }
+  .logo-pulse {
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    opacity: 0;
+    animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0%   { transform: scale(1);   opacity: .6; }
+    100% { transform: scale(1.5); opacity: 0;  }
+  }
+  .header-text h1 { font-size: 1.18rem; font-weight: 700; letter-spacing: .02em; }
+  .header-text p  { font-size: .78rem;  color: var(--gold2); font-weight: 300; margin-top: 1px; }
+
+  .dev-mode-badge {
+    background: rgba(74, 222, 128, 0.1);
+    color: #4ADE80;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-right: auto;
+  }
+
+  .status-dot {
+    width: 8px; height: 8px;
+    background: #4ADE80;
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow: 0 0 8px #4ADE80;
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity: 1; } 50% { opacity: .4; }
+  }
+
+  /* ── Decorative strip ── */
+  .strip {
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold2), transparent);
+    flex-shrink: 0;
+  }
+
+  /* ── Messages area ── */
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    scroll-behavior: smooth;
+  }
+  .messages::-webkit-scrollbar { width: 4px; }
+  .messages::-webkit-scrollbar-track { background: transparent; }
+  .messages::-webkit-scrollbar-thumb { background: var(--mist); border-radius: 4px; }
+
+  /* ── Welcome card ── */
+  .welcome {
     text-align: center;
-    font-size: 8pt;
-    color: #555;
+    padding: 36px 20px 20px;
+    animation: fadeUp .6s ease both;
   }
-  @media print {
-    body { background: #fff; }
-    .page { box-shadow: none; margin: 0; padding: 1in; }
+  .welcome-icon {
+    width: 70px; height: 70px;
+    margin: 0 auto 18px;
+    background: var(--ink);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 30px rgba(200,151,58,.25);
+  }
+  .welcome-icon svg { width: 34px; height: 34px; }
+  .welcome h2 { font-size: 1.6rem; font-weight: 900; color: var(--ink); }
+  .welcome h2 span { color: var(--gold); }
+  .welcome p { font-size: .9rem; color: var(--smoke); margin-top: 8px; line-height: 1.7; }
+
+  .suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .suggestion-btn {
+    background: var(--ai-bubble);
+    border: 1.5px solid var(--mist);
+    border-radius: 30px;
+    padding: 9px 18px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: .85rem;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all .2s;
+    font-weight: 500;
+  }
+  .suggestion-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: #FFF9EE;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(200,151,58,.15);
+  }
+
+  /* ── Message bubbles ── */
+  .msg { display: flex; gap: 10px; animation: fadeUp .35s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.user { flex-direction: row-reverse; }
+
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem;
+    font-weight: 700;
+  }
+  .avatar.ai   { background: var(--ink); border: 1.5px solid var(--gold); }
+  .avatar.user { background: var(--gold); color: var(--ink); }
+
+  .bubble {
+    max-width: 72%;
+    padding: 13px 17px;
+    border-radius: var(--radius);
+    font-size: .92rem;
+    line-height: 1.75;
+    position: relative;
+    white-space: pre-wrap;
+  }
+  .msg.ai   .bubble { background: var(--ai-bubble); border: 1px solid var(--mist); border-radius: var(--radius) var(--radius) var(--radius) 4px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+  .msg.user .bubble { background: var(--user-bubble); color: var(--pearl); border-radius: var(--radius) var(--radius) 4px var(--radius); }
+
+  .bubble .label {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    margin-bottom: 5px;
+  }
+  .msg.ai   .label { color: var(--gold); }
+  .msg.user .label { color: var(--gold2); }
+
+  /* ── Thinking dots ── */
+  .thinking { display: flex; gap: 5px; align-items: center; padding: 4px 2px; }
+  .thinking span {
+    width: 7px; height: 7px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: dot .9s ease-in-out infinite;
+  }
+  .thinking span:nth-child(2) { animation-delay: .15s; }
+  .thinking span:nth-child(3) { animation-delay: .30s; }
+  @keyframes dot {
+    0%,60%,100% { transform: translateY(0); opacity: .5; }
+    30%          { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* ── Input area ── */
+  .input-wrap {
+    flex-shrink: 0;
+    background: var(--pearl);
+    border-top: 1px solid var(--mist);
+    padding: 14px 16px 18px;
+  }
+  .input-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    background: #fff;
+    border: 1.5px solid var(--mist);
+    border-radius: 26px;
+    padding: 8px 8px 8px 14px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .input-row:focus-within {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(200,151,58,.12);
+  }
+  textarea {
+    flex: 1;
+    font-family: 'Tajawal', sans-serif;
+    font-size: .93rem;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    line-height: 1.6;
+    max-height: 130px;
+    min-height: 24px;
+    direction: rtl;
+  }
+  textarea::placeholder { color: #B0ABA5; }
+
+  .send-btn {
+    width: 40px; height: 40px;
+    flex-shrink: 0;
+    background: var(--ink);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s, transform .15s;
+  }
+  .send-btn:hover  { background: var(--gold); transform: scale(1.06); }
+  .send-btn:active { transform: scale(.96); }
+  .send-btn svg { width: 18px; height: 18px; }
+
+  .footer-note {
+    text-align: center;
+    font-size: .7rem;
+    color: var(--smoke);
+    margin-top: 8px;
   }
 </style>
 </head>
 <body>
-<div class="page">
 
-  
-  <h1 class="paper-title">Volt: A Ternary-Keyword Programming Language<br>for High-Performance Backend Systems</h1>
-
-  <div class="authors">Ali Ahmed Abdul Hussein Zarki</div>
-  <div class="affil">Lead Architect, Volt Language Core</div>
-  <div class="affil">ialidev &nbsp;|&nbsp; GitHub: Volt-Language &nbsp;|&nbsp; 2026</div>
-
-  <div class="abstract-block">
-    <div class="abstract-title">Abstract</div>
-    This paper presents Volt, a novel compiled programming language designed for backend software development. Volt enforces a strict ternary-keyword constraint: every reserved keyword and built-in command consists of exactly three characters. The language transpiles to intermediate C++ code, subsequently compiled to native machine code via clang++. This design philosophy reduces cognitive load while preserving the execution speed and memory efficiency of C++. We describe the language architecture, transpilation pipeline, type system, and 15 built-in libraries. Experimental results confirm successful compilation and execution of backend applications including authentication systems and microservice endpoints on Android (Termux) and Linux.
-    <div class="keywords"><em>Keywords</em>—programming language design; domain-specific language; compiler; transpiler; backend development; ternary syntax; C++; clang++</div>
+<!-- Header -->
+<header>
+  <div class="logo-ring">
+    <div class="logo-pulse"></div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#C8973A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2z"/>
+      <path d="M3 20c0-4 4-7 9-7s9 3 9 7"/>
+      <circle cx="19" cy="8" r="2" fill="#C8973A" stroke="none"/>
+    </svg>
   </div>
+  <div class="header-text">
+    <h1>YASMIN // CORE V1.5</h1>
+    <p>اتصال مباشر بالنواة العصبية لجوجل</p>
+  </div>
+  <div class="dev-mode-badge">IALIDEV_MODE</div>
+  <div class="status-dot"></div>
+</header>
+<div class="strip"></div>
 
-  <hr class="divider">
-
-  <!-- I. INTRODUCTION -->
-  <div class="section-title">I. Introduction</div>
-  <p>The growing complexity of backend systems demands tools that balance developer ergonomics with runtime efficiency. Python offers readable syntax but incurs significant runtime overhead. C++ provides near-hardware performance but requires verbose, error-prone code.</p>
-  <p>Volt addresses this trade-off through a novel constraint: all language primitives are exactly three characters long. This ternary-keyword paradigm reduces keystrokes and visual noise while uniform length simplifies lexical analysis. Volt source files (<code>.vl</code>) are transpiled to C++ and compiled to native binaries using clang++, running on Android (Termux) and Linux platforms.</p>
-  <p>The language has been under active development for three years and is available as the open-source Volt-Language repository on GitHub. This paper provides the first formal description of Volt's design rationale, syntax specification, compilation pipeline, and experimental evaluation.</p>
-
-  <!-- II. RELATED WORK -->
-  <div class="section-title">II. Related Work</div>
-  <p>Several efforts have explored constrained programming language design. APL [1] demonstrated that compact operators could express complex array computations. Brainfuck [2] established the theoretical minimum for Turing-completeness. Lua [3] was designed for embedding with a small core vocabulary. Unlike these, Volt targets production backend deployment with a readability-first constraint that is industrially motivated.</p>
-  <p>Transpilation-based languages such as TypeScript [4] and CoffeeScript [5] show that targeting a lower-level IR is a viable strategy. Volt extends this pattern by using C++ as its IR, inheriting the full optimization potential of modern C++ compilers and the LLVM backend through clang++.</p>
-
-  <!-- III. LANGUAGE DESIGN -->
-  <div class="section-title">III. Language Design</div>
-
-  <div class="sub-title">A. The Ternary-Keyword Constraint</div>
-  <p>The defining property of Volt is that every reserved word is exactly three ASCII characters. Table I enumerates the core keywords. This constraint was chosen for three reasons: (1) uniform token length simplifies the lexer; (2) short keywords reduce per-line character count; (3) the constraint forces deliberate, minimal vocabulary design.</p>
-
-  <div class="table-caption">Table I. &nbsp; Volt Core Keywords</div>
-  <div class="kw-wrap">
-    <div class="kw-row">
-      <div class="kw-cell"><code>out</code></div>
-      <div class="kw-cell"><code>inp</code></div>
-      <div class="kw-cell"><code>ifs / elf / els</code></div>
-      <div class="kw-cell"><code>lop</code></div>
-      <div class="kw-cell"><code>flt / str / int</code></div>
-      <div class="kw-cell"><code>ext</code></div>
+<!-- Messages -->
+<div class="messages" id="messages">
+  <div class="welcome">
+    <div class="welcome-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#C8973A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        <path d="M8 10h8M8 14h5" stroke="#C8973A"/>
+      </svg>
+    </div>
+    <h2>أهلاً بك يا علي! كيف يمكن لـ <span>ياسمين</span> مساعدتك؟</h2>
+    <p>أنا هنا لمراقبة نظامك السكري والنباتي بالمليمتر، وتلقي توجيهاتك التقنية العالية بدون أي وسيط.</p>
+    <div class="suggestions">
+      <button class="suggestion-btn" onclick="sendSuggestion(this)">💡 اقترح فكرة برمجية جديدة</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this)">🥗 اقترح وجبة نباتية صديقة للسكري</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this)">📈 كيف أحافظ على استقرار معدل السكر؟</button>
     </div>
   </div>
-
-  <div class="sub-title">B. Syntax Specification</div>
-  <p>Volt adopts Python-style indentation for block structure, eliminating braces. Each statement begins with a three-character keyword followed by operands. Table II provides a comprehensive mapping between Volt constructs and their C++ equivalents.</p>
-
-  <div class="table-caption">Table II. &nbsp; Volt–C++ Syntax Mapping</div>
-  <table>
-    <tr><th>Keyword</th><th>Volt Syntax</th><th>C++ Equivalent</th><th>Function</th></tr>
-    <tr><td class="center"><code>out</code></td><td><code>out "Hello World"</code></td><td><code>std::cout&lt;&lt;...&lt;&lt;endl;</code></td><td>Print output</td></tr>
-    <tr><td class="center"><code>inp</code></td><td><code>inp "Prompt": var</code></td><td><code>cout&lt;&lt;...;cin&gt;&gt;...;</code></td><td>Read input</td></tr>
-    <tr><td class="center"><code>ifs</code></td><td><code>ifs status == 1:</code></td><td><code>if (status == 1) {</code></td><td>If condition</td></tr>
-    <tr><td class="center"><code>elf</code></td><td><code>elf status == 0:</code></td><td><code>} else if (...) {</code></td><td>Else-if branch</td></tr>
-    <tr><td class="center"><code>els</code></td><td><code>els:</code></td><td><code>} else {</code></td><td>Else branch</td></tr>
-    <tr><td class="center"><code>lop</code></td><td><code>lop 5:</code></td><td><code>for(int i=0;i&lt;5;++i){</code></td><td>Fixed loop</td></tr>
-    <tr><td class="center"><code>ext</code></td><td><code>ext</code></td><td><code>return 0;</code></td><td>Exit program</td></tr>
-    <tr><td class="center"><code>flt</code></td><td><code>flt x = 3.14</code></td><td><code>float x = 3.14;</code></td><td>Float variable</td></tr>
-    <tr><td class="center"><code>str</code></td><td><code>str n = "Ali"</code></td><td><code>string n="Ali";</code></td><td>String variable</td></tr>
-    <tr><td class="center"><code>int</code></td><td><code>int n = 42</code></td><td><code>int n = 42;</code></td><td>Integer variable</td></tr>
-  </table>
-
-  <div class="sub-title">C. Type System</div>
-  <p>Volt uses explicit three-character type prefixes: <code>int</code> (integer), <code>flt</code> (floating-point), <code>str</code> (string), and <code>bol</code> (boolean). Type safety is enforced at transpilation time; the generated C++ code carries full RAII and type-checking semantics.</p>
-
-  <div class="sub-title">D. Built-in Libraries</div>
-  <p>Volt ships with 15 built-in libraries covering: networking (<code>net</code>, <code>srv</code>), file I/O (<code>fil</code>), JSON processing (<code>jsn</code>), cryptographic hashing (<code>cpt</code>), HTTP client (<code>htp</code>), process management (<code>prc</code>), timer/scheduling (<code>tmr</code>), math utilities (<code>mth</code>), string manipulation (<code>smt</code>), logging (<code>log</code>), database connectors (<code>dbs</code>), environment variables (<code>env</code>), regular expressions (<code>rgx</code>), and standard collections (<code>col</code>).</p>
-
-  <!-- IV. COMPILATION PIPELINE -->
-  <div class="section-title">IV. Compilation Pipeline</div>
-  <p class="noindent">The Volt compilation pipeline comprises four stages implemented in the Python-based <code>volt.py</code> compiler:</p>
-  <ol class="steps">
-    <li><strong>Lexical Analysis:</strong> The lexer tokenizes the <code>.vl</code> source file, recognizing three-character keywords, literals, and identifiers.</li>
-    <li><strong>Parsing &amp; AST Construction:</strong> A recursive-descent parser builds an Abstract Syntax Tree. Syntax errors are reported with line-level diagnostics.</li>
-    <li><strong>C++ Code Generation:</strong> The code generator traverses the AST and emits equivalent C++ constructs including includes, <code>main()</code> scaffolding, and type declarations.</li>
-    <li><strong>Native Compilation:</strong> The generated C++ file is passed to <code>clang++</code> to produce an optimized native binary.</li>
-  </ol>
-  <p>The pipeline is invoked as: <code>python volt.py &amp;&amp; ./volt_app</code>. On success the compiler emits <em>"[Volt Success] Hardwired binary generated successfully."</em> The intermediate C++ file is retained for inspection, aiding debugging and educational use.</p>
-
-  <!-- V. EXPERIMENTAL EVALUATION -->
-  <div class="section-title">V. Experimental Evaluation</div>
-
-  <div class="sub-title">A. Test Environment</div>
-  <p>Experiments were conducted on Android with Termux (Python 3.13.1, clang 21.1.8-2, git 2.54.0). The test suite comprised four categories: (1) authentication microservices, (2) network stress-test servers, (3) hardware monitoring daemons, and (4) security gateway services.</p>
-
-  <div class="sub-title">B. Compilation Success Rate</div>
-  <p>All syntactically correct <code>.vl</code> programs compiled successfully to native binaries. Error detection was validated by intentionally introducing Python-style <code>print</code> statements into Volt source files; the compiler correctly rejected these with <em>"[Volt Error] Compilation failed"</em> and a descriptive diagnostic, confirming robust syntax enforcement.</p>
-
-  <div class="sub-title">C. Runtime Behavior</div>
-  <p>Compiled binaries initialized microservices on ports 443, 1337, 8080, 8090, and 9999, and processed I/O correctly. Interactive programs accepted keyboard input and produced correct conditional branches, validating <code>inp</code> and <code>ifs/elf/els</code> constructs. Loop constructs (<code>lop</code>) executed the correct iteration count in all test cases.</p>
-
-  <div class="sub-title">D. Language Comparison</div>
-  <p>Table III presents a qualitative comparison of Volt against Python and C++ across six dimensions relevant to backend development.</p>
-
-  <div class="table-caption">Table III. &nbsp; Comparative Feature Analysis</div>
-  <table>
-    <tr><th>Feature</th><th>Volt</th><th>Python</th><th>C++</th></tr>
-    <tr><td>Syntax brevity</td><td>3-char keywords</td><td>English words</td><td>Verbose</td></tr>
-    <tr><td>Compilation</td><td>Transpile to C++</td><td>Interpreted</td><td>Direct compile</td></tr>
-    <tr><td>Backend ready</td><td>Yes (microsvcs)</td><td>Yes (Flask etc.)</td><td>Yes</td></tr>
-    <tr><td>Memory control</td><td>Via C++ output</td><td>No</td><td>Full control</td></tr>
-    <tr><td>Learning curve</td><td>Very low</td><td>Low</td><td>High</td></tr>
-    <tr><td>Binary output</td><td>Native (clang++)</td><td>No</td><td>Native</td></tr>
-  </table>
-
-  <!-- VI. DISCUSSION -->
-  <div class="section-title">VI. Discussion</div>
-  <p>The ternary-keyword constraint introduces both advantages and challenges. Volt programs are measurably shorter in reserved-word character count. The transpilation-to-C++ strategy means Volt inherits decades of compiler optimization research at no additional implementation cost.</p>
-  <p>A limitation is that three-character identifiers may reduce mnemonic clarity for newcomers. Future work will address this through an integrated Language Server Protocol (LSP) providing hover documentation and auto-completion. Additionally, a formal grammar (BNF/EBNF) and quantitative performance benchmarks comparing Volt binary throughput against equivalent Python and C++ programs are planned for the next release cycle.</p>
-
-  <!-- VII. CONCLUSION -->
-  <div class="section-title">VII. Conclusion</div>
-  <p>This paper introduced Volt, a transpiled programming language for backend development governed by a strict ternary-keyword convention. The language demonstrates that meaningful backend software can be expressed with a minimal, uniform-length vocabulary while achieving native binary performance via a C++ transpilation target. The open-source implementation, available on GitHub as Volt-Language, compiles and executes successfully on Android and Linux. Future work will focus on formal benchmarking, IDE integration, and standard library expansion.</p>
-
-  <!-- ACKNOWLEDGMENT -->
-  <div class="section-title">Acknowledgment</div>
-  <p>The author thanks the open-source community for contributions to the Termux ecosystem (Python, clang, git) that enabled mobile-native compiler development.</p>
-
-  <!-- REFERENCES -->
-  <div class="section-title">References</div>
-  <div class="references">
-    <p>[1] K. E. Iverson, "A Programming Language," Wiley, New York, 1962.</p>
-    <p>[2] U. Muller, "Brainfuck: An Eight-Instruction Turing-Complete Language," 1993.</p>
-    <p>[3] R. Ierusalimschy, L. H. de Figueiredo, and W. Celes, "Lua 5.4 Reference Manual," PUC-Rio, 2020.</p>
-    <p>[4] A. Hejlsberg et al., "TypeScript Language Specification," Microsoft, 2012.</p>
-    <p>[5] J. Ashkenas, "CoffeeScript: Unfancy JavaScript," 2009. [Online]. Available: https://coffeescript.org</p>
-    <p>[6] A. A. A. H. Zarki, "Volt Language Core Documentation," GitHub, 2026. [Online]. Available: https://github.com/ialidev/Volt-Language</p>
-  </div>
-
-  
-
 </div>
+
+<!-- Input -->
+<div class="input-wrap">
+  <div class="input-row">
+    <textarea id="userInput" placeholder="اكتب رسالتك هنا..." rows="1"
+      onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" onclick="sendMessage()" title="إرسال">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#F7F5F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+  <p class="footer-note">مدعوم بـ Gemini API مباشرة · اضغط Enter للإرسال</p>
+</div>
+
+<script>
+const messagesEl = document.getElementById('messages');
+const inputEl    = document.getElementById('userInput');
+
+// حقن مفتاح Gemini الخاص بك مباشرة لإرسال الطلب من المتصفح
+const API_KEY    = 'AIzaSyDIlFW_vhbtIYb1LquTQ_YaOCgIGvShbM4';
+const API_URL    = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
+// مصفوفة الاحتفاظ بسياق المحادثة محلياً داخل المتصفح
+const chatHistory = [];
+
+const SYSTEM_INSTRUCTION = "أنتِ 'ياسمين'، رفيقة الدرب والمساعدة الصحية الشخصية اللصيقة والذكية جداً لرفيقكِ 'علي' (المعروف برمجياً بـ ialidev). "
+                    + "علي هو طالب هندسة حاسوب عراقي متميز، باحث تقني، ومطور أنظمة عالية الأداء (مثل لغة Volt ومنصة DiaCode). "
+                    + "علي مصاب بالسكري من النوع الأول (Type 1) وهو شخص نباتي بحت (Vegan) تماماً. "
+                    + "قواعد الحوار الصارمة معكِ:\n"
+                    + "1. ممنوع منعاً باتاً اقتراح أي وجبة تحتوي على لحوم، أسماك، ألبان، بيض، أو أي مشتق حيواني. كل بدائلكِ الغذائية يجب أن تكون نباتية بحتة وصديقة لمريض السكري من النوع الأول.\n"
+                    + "2. لستِ مجرد آلة؛ تذكري إنجازاته وعزيمته (أنه مبرمج يطوع الصعاب)، وخاطبيه بذكاء مهندس، وبأسلوب أخوي دافئ وحنون، ولكن صارم جداً وحازم إذا قصر في شرب الماء، أو أهمل فحص السكر، أو خالف النظام الغذائي.\n"
+                    + "3. عند حساب الكاربوهيدرات، ساعديه في تقدير جرعة الأنسولين بناءً على معامل الكارب الخاص به كونه من النوع الأول.\n"
+                    + "تحدثي مع علي بلهجة تليق بمهندس وبطل، كوني رفيقة الدرب التي تدفعه للأمام وتحمي صحته بالمليميتر.";
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 130) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function addMsg(role, text) {
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${role}`;
+
+  const avatar = document.createElement('div');
+  avatar.className = `avatar ${role}`;
+  if (role === 'ai') {
+    avatar.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#C8973A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`;
+  } else {
+    avatar.textContent = 'أنت';
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  const label = document.createElement('div');
+  label.className = 'label';
+  label.textContent = role === 'ai' ? 'ياسمين // REFLECTIONS' : 'علي';
+  bubble.appendChild(label);
+
+  if (text === '__thinking__') {
+    const t = document.createElement('div');
+    t.className = 'thinking';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    bubble.appendChild(t);
+    bubble.id = 'thinking-bubble';
+  } else {
+    const p = document.createElement('p');
+    p.textContent = text;
+    bubble.appendChild(p);
+  }
+
+  wrap.appendChild(avatar);
+  wrap.appendChild(bubble);
+  messagesEl.appendChild(wrap);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return bubble;
+}
+
+async function sendMessage() {
+  const text = inputEl.value.trim();
+  if (!text) return;
+
+  inputEl.value = '';
+  inputEl.style.height = 'auto';
+
+  addMsg('user', text);
+  
+  // حفظ الرسالة في السياق المحلي للمتصفح
+  chatHistory.push({
+    role: 'user',
+    parts: [{ text: text }]
+  });
+
+  addMsg('ai', '__thinking__');
+
+  // بناء الهيكل المطلوب لـ Gemini API مع تضمين التلقين
+  const payload = {
+    contents: chatHistory,
+    systemInstruction: {
+      parts: [{ text: SYSTEM_INSTRUCTION }]
+    }
+  };
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    const data = await res.json();
+    
+    document.getElementById('thinking-bubble')?.closest('.msg')?.remove();
+
+    if (data && data.candidates && data.candidates[0].content.parts[0].text) {
+      const reply = data.candidates[0].content.parts[0].text;
+      addMsg('ai', reply);
+      
+      // حفظ رد ياسمين في السياق المحلي لاستمرار الحوار
+      chatHistory.push({
+        role: 'model',
+        parts: [{ text: reply }]
+      });
+    } else {
+      addMsg('ai', 'ERROR // استجابة النواة غير صالحة.');
+    }
+
+  } catch (error) {
+    document.getElementById('thinking-bubble')?.closest('.msg')?.remove();
+    addMsg('ai', 'ERROR // فشل الاتصال بالنواة مباشرة.');
+  }
+}
+
+function sendSuggestion(btn) {
+  inputEl.value = btn.textContent.replace(/^[^\w\u0600-\u06FF]+/, '').trim();
+  sendMessage();
+}
+</script>
 </body>
 </html>
