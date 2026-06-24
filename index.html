@@ -340,11 +340,10 @@
 const messagesEl = document.getElementById('messages');
 const inputEl    = document.getElementById('userInput');
 
-// حقن مفتاح Gemini الخاص بك مباشرة لإرسال الطلب من المتصفح
+// ربط النواة بمفتاح الـ API المشفر والجاهز للاستدعاء المستقل
 const API_KEY    = 'AIzaSyDIlFW_vhbtIYb1LquTQ_YaOCgIGvShbM4';
 const API_URL    = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
-// مصفوفة الاحتفاظ بسياق المحادثة محلياً داخل المتصفح
 const chatHistory = [];
 
 const SYSTEM_INSTRUCTION = "أنتِ 'ياسمين'، رفيقة الدرب والمساعدة الصحية الشخصية اللصيقة والذكية جداً لرفيقكِ 'علي' (المعروف برمجياً بـ ialidev). "
@@ -412,7 +411,6 @@ async function sendMessage() {
 
   addMsg('user', text);
   
-  // حفظ الرسالة في السياق المحلي للمتصفح
   chatHistory.push({
     role: 'user',
     parts: [{ text: text }]
@@ -420,7 +418,6 @@ async function sendMessage() {
 
   addMsg('ai', '__thinking__');
 
-  // بناء الهيكل المطلوب لـ Gemini API مع تضمين التلقين
   const payload = {
     contents: chatHistory,
     systemInstruction: {
@@ -443,7 +440,6 @@ async function sendMessage() {
       const reply = data.candidates[0].content.parts[0].text;
       addMsg('ai', reply);
       
-      // حفظ رد ياسمين في السياق المحلي لاستمرار الحوار
       chatHistory.push({
         role: 'model',
         parts: [{ text: reply }]
