@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YASMIN // CORE V1.5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght=300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --ink:    #0D0D0F;
@@ -357,7 +357,8 @@ const inputEl    = document.getElementById('userInput');
 const debugEl    = document.getElementById('debugPanel');
 
 const API_KEY    = 'AIzaSyDIlFW_vhbtIYb1LquTQ_YaOCgIGvShbM4';
-const API_URL    = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+// استخدام v1 بدلاً من v1beta لحل مشكلة الـ 404 نهائياً لموديل الفلاش
+const API_URL    = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
 const chatHistory = [];
 
@@ -366,129 +367,4 @@ const SYSTEM_INSTRUCTION = "أنتِ 'ياسمين'، رفيقة الدرب وا
                     + "علي مصاب بالسكري من النوع الأول (Type 1) وهو شخص نباتي بحت (Vegan) تماماً. "
                     + "قواعد الحوار الصارمة معكِ:\n"
                     + "1. ممنوع منعاً باتاً اقتراح أي وجبة تحتوي على لحوم، أسماك، ألبان، بيض، أو أي مشتق حيواني. كل بدائلكِ الغذائية يجب أن تكون نباتية بحتة وصديقة لمريض السكري من النوع الأول.\n"
-                    + "2. لستِ مجرد آلة؛ تذكري إنجازاته وعزيمته (أنه مبرمج يطوع الصعاب)، وخاطبيه بذكاء مهندس، وبأسلوب أخوي دافئ وحنون، ولكن صارم جداً وحازم إذا قصر في شرب الماء، أو أهمل فحص السكر، أو خالف النظام الغذائي.\n"
-                    + "3. عند حساب الكاربوهيدرات، ساعديه في تقدير جرعة الأنسولين بناءً على معامل الكارب الخاص به كونه من النوع الأول.\n"
-                    + "تحدثي مع علي بلهجة تليق بمهندس وبطل، كوني رفيقة الدرب التي تدفعه للأمام وتحمي صحته بالمليميتر.";
-
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 130) + 'px';
-}
-
-function handleKey(e) {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-}
-
-function showDebug(msg) {
-  debugEl.style.display = 'block';
-  debugEl.textContent = `[DEBUG CONSOLE]: ${msg}`;
-}
-
-function clearDebug() {
-  debugEl.style.display = 'none';
-  debugEl.textContent = '';
-}
-
-function addMsg(role, text) {
-  const wrap = document.createElement('div');
-  wrap.className = `msg ${role}`;
-
-  const avatar = document.createElement('div');
-  avatar.className = `avatar ${role}`;
-  if (role === 'model') {
-    avatar.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#C8973A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`;
-  } else {
-    avatar.textContent = 'أنت';
-  }
-
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble';
-  const label = document.createElement('div');
-  label.className = 'label';
-  label.textContent = role === 'model' ? 'ياسمين // REFLECTIONS' : 'علي';
-  bubble.appendChild(label);
-
-  if (text === '__thinking__') {
-    const t = document.createElement('div');
-    t.className = 'thinking';
-    t.innerHTML = '<span></span><span></span><span></span>';
-    bubble.appendChild(t);
-    bubble.id = 'thinking-bubble';
-  } else {
-    const p = document.createElement('p');
-    p.textContent = text;
-    bubble.appendChild(p);
-  }
-
-  wrap.appendChild(avatar);
-  wrap.appendChild(bubble);
-  messagesEl.appendChild(wrap);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-  return bubble;
-}
-
-async function sendMessage() {
-  const text = inputEl.value.trim();
-  if (!text) return;
-
-  inputEl.value = '';
-  inputEl.style.height = 'auto';
-  clearDebug();
-
-  addMsg('user', text);
-  
-  chatHistory.push({
-    role: 'user',
-    parts: [{ text: text }]
-  });
-
-  addMsg('model', '__thinking__');
-
-  const payload = {
-    contents: chatHistory,
-    systemInstruction: {
-      parts: [{ text: SYSTEM_INSTRUCTION }]
-    }
-  };
-
-  try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    
-    const data = await res.json();
-    
-    document.getElementById('thinking-bubble')?.closest('.msg')?.remove();
-
-    if (res.ok && data && data.candidates && data.candidates[0].content.parts[0].text) {
-      const reply = data.candidates[0].content.parts[0].text;
-      
-      addMsg('model', reply);
-      
-      chatHistory.push({
-        role: 'model',
-        parts: [{ text: reply }]
-      });
-    } else {
-      // طباعة تفاصيل الخطأ القادمة من السيرفر مباشرة في واجهة المستخدم
-      const errorMsg = data.error ? `${data.error.code} - ${data.error.message}` : JSON.stringify(data);
-      showDebug(`Google Server Response Error: ${errorMsg}`);
-      addMsg('model', 'ERROR // استجابة غير صالحة من خادم جوجل العصبى.');
-    }
-
-  } catch (error) {
-    document.getElementById('thinking-bubble')?.closest('.msg')?.remove();
-    showDebug(`Fetch Catch Exception: ${error.message}`);
-    addMsg('model', 'ERROR // فشل في الاتصال بالشبكة الخارجية.');
-  }
-}
-
-function sendSuggestion(btn) {
-  inputEl.value = btn.textContent.replace(/^[^\w\u0600-\u06FF]+/, '').trim();
-  sendMessage();
-}
-</script>
-</body>
-</html>
+                    + "2. لستِ مجرد آلة؛ تذكري إنجازاته وعزيمته (أنه مبرمج يطوع الصعاب)، وخاطبيه بذكاء مهندس، وبأسلوب أخوي دافئ وحنون، ولكن صارم جداً وحازم إذا قصر في شرب الماء، أو أه
