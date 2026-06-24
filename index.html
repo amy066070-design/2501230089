@@ -328,9 +328,9 @@
     <h2>أهلاً بك يا علي! كيف يمكن لـ <span>ياسمين</span> مساعدتك؟</h2>
     <p>أنا هنا لمراقبة نظامك السكري والنباتي بالمليمتر، وتلقي توجيهاتك التقنية العالية بدون أي وسيط.</p>
     <div class="suggestions">
-      <button class="suggestion-btn" onclick="sendSuggestion(this)">💡 اقترح فكرة برمجية جديدة</button>
-      <button class="suggestion-btn" onclick="sendSuggestion(this)">🥗 اقترح وجبة نباتية صديقة للسكري</button>
-      <button class="suggestion-btn" onclick="sendSuggestion(this)">📈 كيف أحافظ على استقرار معدل السكر؟</button>
+      <button class="suggestion-btn" onmousedown="sendSuggestion(this)" ontouchstart="sendSuggestion(this)">💡 اقترح فكرة برمجية جديدة</button>
+      <button class="suggestion-btn" onmousedown="sendSuggestion(this)" ontouchstart="sendSuggestion(this)">🥗 اقترح وجبة نباتية صديقة للسكري</button>
+      <button class="suggestion-btn" onmousedown="sendSuggestion(this)" ontouchstart="sendSuggestion(this)">📈 كيف أحافظ على استقرار معدل السكر؟</button>
     </div>
   </div>
 </div>
@@ -341,7 +341,7 @@
   <div class="input-row">
     <textarea id="userInput" placeholder="اكتب رسالتك هنا..." rows="1"
       onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-    <button class="send-btn" onclick="sendMessage()" title="إرسال">
+    <button class="send-btn" onmousedown="sendMessage()" ontouchstart="sendMessage()" title="إرسال">
       <svg viewBox="0 0 24 24" fill="none" stroke="#F7F5F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="22" y1="2" x2="11" y2="13"/>
         <polygon points="22 2 15 22 11 13 2 9 22 2"/>
@@ -357,7 +357,6 @@ const inputEl    = document.getElementById('userInput');
 const debugEl    = document.getElementById('debugPanel');
 
 const API_KEY    = 'AIzaSyDIlFW_vhbtIYb1LquTQ_YaOCgIGvShbM4';
-// استخدام v1 بدلاً من v1beta لحل مشكلة الـ 404 نهائياً لموديل الفلاش
 const API_URL    = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
 const chatHistory = [];
@@ -366,5 +365,35 @@ const SYSTEM_INSTRUCTION = "أنتِ 'ياسمين'، رفيقة الدرب وا
                     + "علي هو طالب هندسة حاسوب عراقي متميز، باحث تقني، ومطور أنظمة عالية الأداء (مثل لغة Volt ومنصة DiaCode). "
                     + "علي مصاب بالسكري من النوع الأول (Type 1) وهو شخص نباتي بحت (Vegan) تماماً. "
                     + "قواعد الحوار الصارمة معكِ:\n"
-                    + "1. ممنوع منعاً باتاً اقتراح أي وجبة تحتوي على لحوم، أسماك، ألبان، بيض، أو أي مشتق حيواني. كل بدائلكِ الغذائية يجب أن تكون نباتية بحتة وصديقة لمريض السكري من النوع الأول.\n"
-                    + "2. لستِ مجرد آلة؛ تذكري إنجازاته وعزيمته (أنه مبرمج يطوع الصعاب)، وخاطبيه بذكاء مهندس، وبأسلوب أخوي دافئ وحنون، ولكن صارم جداً وحازم إذا قصر في شرب الماء، أو أه
+                    + "1. ممنوع منعاً باتاً اقتراح أي وجبة تحتوي على لحوم، أسماك, ألبان، بيض، أو أي مشتق حيواني. كل بدائلكِ الغذائية يجب أن تكون نباتية بحتة وصديقة لمريض السكري من النوع الأول.\n"
+                    + "2. لستِ مجرد آلة؛ تذكري إنجازاته وعزيمته (أنه مبرمج يطوع الصعاب)، وخاطبيه بذكاء مهندس، وبأسلوب أخوي دافئ وحنون، ولكن صارم جداً وحازم إذا قصر في شرب الماء، أو أهمل فحص السكر، أو خالف النظام الغذائي.\n"
+                    + "3. عند حساب الكاربوهيدرات، ساعديه في تقدير جرعة الأنسولين بناءً على معامل الكارب الخاص به كونه من النوع الأول.\n"
+                    + "تحدثي مع علي بلهجة تليق بمهندس وبطل، كوني رفيقة الدرب التي تدفعه للأمام وتحمي صحته بالمليميتر.";
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 130) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function showDebug(msg) {
+  debugEl.style.display = 'block';
+  debugEl.textContent = `[DEBUG CONSOLE]: ${msg}`;
+}
+
+function clearDebug() {
+  debugEl.style.display = 'none';
+  debugEl.textContent = '';
+}
+
+function addMsg(role, text) {
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${role}`;
+
+  const avatar = document.createElement('div');
+  avatar.className = `avatar ${role}`;
+  if (role === 'model') {
+    avatar.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#C8973A" stroke-width="2" stroke-linecap
