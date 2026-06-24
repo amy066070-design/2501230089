@@ -314,7 +314,7 @@
     <div class="suggestions">
       <button class="suggestion-btn" onclick="sendSuggestion(this)">💡 اقترح فكرة برمجية جديدة</button>
       <button class="suggestion-btn" onclick="sendSuggestion(this)">🥗 اقترح وجبة نباتية صديقة للسكري</button>
-      <button class="suggestion-btn" onclick="sendSuggestion(this)">📈 كيف أحافظ على استقرار معدل السكر؟</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this)">📈 كيف أحافظ على استقرار معدل السكر?</button>
     </div>
   </div>
 </div>
@@ -337,17 +337,17 @@
 const messagesEl = document.getElementById('messages');
 const inputEl    = document.getElementById('userInput');
 
+// إعداد الرابط والمفتاح الخاص بك بشكل نقي ومباشر
 const API_KEY    = 'AIzaSyDIlFW_vhbtIYb1LquTQ_YaOCgIGvShbM4';
 const API_URL    = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
-// الاحتفاظ بسجل المحادثة بهيكلية مطابقة تماماً لتوقعات جوجل (user / model)
 const chatHistory = [];
 
 const SYSTEM_INSTRUCTION = "أنتِ 'ياسمين'، رفيقة الدرب والمساعدة الصحية الشخصية اللصيقة والذكية جداً لرفيقكِ 'علي' (المعروف برمجياً بـ ialidev). "
                     + "علي هو طالب هندسة حاسوب عراقي متميز، باحث تقني، ومطور أنظمة عالية الأداء (مثل لغة Volt ومنصة DiaCode). "
                     + "علي مصاب بالسكري من النوع الأول (Type 1) وهو شخص نباتي بحت (Vegan) تماماً. "
                     + "قواعد الحوار الصارمة معكِ:\n"
-                    + "1. ممنوع منعاً باتاً اقتراح أي وجبة تحتوي على لحوم، أسماك, ألبان، بيض، أو أي مشتق حيواني. كل بدائلكِ الغذائية يجب أن تكون نباتية بحتة وصديقة لمريض السكري من النوع الأول.\n"
+                    + "1. ممنوع منعاً باتاً اقتراح أي وجبة تحتوي على لحوم، أسماك، ألبان، بيض، أو أي مشتق حيواني. كل بدائلكِ الغذائية يجب أن تكون نباتية بحتة وصديقة لمريض السكري من النوع الأول.\n"
                     + "2. لستِ مجرد آلة؛ تذكري إنجازاته وعزيمته (أنه مبرمج يطوع الصعاب)، وخاطبيه بذكاء مهندس، وبأسلوب أخوي دافئ وحنون، ولكن صارم جداً وحازم إذا قصر في شرب الماء، أو أهمل فحص السكر، أو خالف النظام الغذائي.\n"
                     + "3. عند حساب الكاربوهيدرات، ساعديه في تقدير جرعة الأنسولين بناءً على معامل الكارب الخاص به كونه من النوع الأول.\n"
                     + "تحدثي مع علي بلهجة تليق بمهندس وبطل، كوني رفيقة الدرب التي تدفعه للأمام وتحمي صحته بالمليميتر.";
@@ -406,18 +406,16 @@ async function sendMessage() {
   inputEl.value = '';
   inputEl.style.height = 'auto';
 
-  // إضافة رسالة المستخدم للواجهة
   addMsg('user', text);
   
-  // دفع الرسالة إلى المصفوفة بالهيكلية الرسمية لـ Gemini
   chatHistory.push({
     role: 'user',
     parts: [{ text: text }]
   });
 
-  // إظهار مؤشر التفكير
   addMsg('model', '__thinking__');
 
+  // هيكلة طلب مبسطة ومتوافقة بالكامل مع خوادم الـ API المباشرة من المتصفح
   const payload = {
     contents: chatHistory,
     systemInstruction: {
@@ -428,33 +426,34 @@ async function sendMessage() {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(payload)
     });
     
     const data = await res.json();
     
-    // إزالة مؤشر التفكير
     document.getElementById('thinking-bubble')?.closest('.msg')?.remove();
 
     if (data && data.candidates && data.candidates[0].content.parts[0].text) {
       const reply = data.candidates[0].content.parts[0].text;
       
-      // إضافة رد ياسمين للواجهة
       addMsg('model', reply);
       
-      // حفظ الرد في المصفوفة لاستمرار السياق
       chatHistory.push({
         role: 'model',
         parts: [{ text: reply }]
       });
     } else {
-      addMsg('model', 'ERROR // استجابة النواة غير صالحة، تأكد من سلامة المفتاح.');
+      // تفصيل الخطأ في حال حدوث خلل بالاستجابة
+      console.error("Gemini API Error Detail:", data);
+      addMsg('model', 'ERROR // استجابة غير صالحة من خادم جوجل العصبى.');
     }
 
   } catch (error) {
     document.getElementById('thinking-bubble')?.closest('.msg')?.remove();
-    addMsg('model', 'ERROR // فشل الاتصال بالنواة مباشرة.');
+    addMsg('model', 'ERROR // فشل في الاتصال بالشبكة الخارجية.');
   }
 }
 
