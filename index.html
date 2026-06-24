@@ -222,6 +222,22 @@
     30%          { transform: translateY(-6px); opacity: 1; }
   }
 
+  /* ── Debug Console Overlay ── */
+  .debug-panel {
+    background: #FEE2E2;
+    border-top: 2px solid #EF4444;
+    color: #991B1B;
+    padding: 10px 16px;
+    font-family: monospace;
+    font-size: 0.8rem;
+    direction: ltr;
+    text-align: left;
+    max-height: 100px;
+    overflow-y: auto;
+    display: none;
+    flex-shrink: 0;
+  }
+
   /* ── Input area ── */
   .input-wrap {
     flex-shrink: 0;
@@ -314,10 +330,12 @@
     <div class="suggestions">
       <button class="suggestion-btn" onclick="sendSuggestion(this)">💡 اقترح فكرة برمجية جديدة</button>
       <button class="suggestion-btn" onclick="sendSuggestion(this)">🥗 اقترح وجبة نباتية صديقة للسكري</button>
-      <button class="suggestion-btn" onclick="sendSuggestion(this)">📈 كيف أحافظ على استقرار معدل السكر?</button>
+      <button class="suggestion-btn" onclick="sendSuggestion(this)">📈 كيف أحافظ على استقرار معدل السكر؟</button>
     </div>
   </div>
 </div>
+
+<div class="debug-panel" id="debugPanel"></div>
 
 <div class="input-wrap">
   <div class="input-row">
@@ -336,8 +354,8 @@
 <script>
 const messagesEl = document.getElementById('messages');
 const inputEl    = document.getElementById('userInput');
+const debugEl    = document.getElementById('debugPanel');
 
-// إعداد الرابط والمفتاح الخاص بك بشكل نقي ومباشر
 const API_KEY    = 'AIzaSyDIlFW_vhbtIYb1LquTQ_YaOCgIGvShbM4';
 const API_URL    = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
@@ -359,6 +377,16 @@ function autoResize(el) {
 
 function handleKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function showDebug(msg) {
+  debugEl.style.display = 'block';
+  debugEl.textContent = `[DEBUG CONSOLE]: ${msg}`;
+}
+
+function clearDebug() {
+  debugEl.style.display = 'none';
+  debugEl.textContent = '';
 }
 
 function addMsg(role, text) {
@@ -405,6 +433,7 @@ async function sendMessage() {
 
   inputEl.value = '';
   inputEl.style.height = 'auto';
+  clearDebug();
 
   addMsg('user', text);
   
@@ -415,7 +444,6 @@ async function sendMessage() {
 
   addMsg('model', '__thinking__');
 
-  // هيكلة طلب مبسطة ومتوافقة بالكامل مع خوادم الـ API المباشرة من المتصفح
   const payload = {
     contents: chatHistory,
     systemInstruction: {
@@ -426,9 +454,7 @@ async function sendMessage() {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
     
@@ -436,7 +462,7 @@ async function sendMessage() {
     
     document.getElementById('thinking-bubble')?.closest('.msg')?.remove();
 
-    if (data && data.candidates && data.candidates[0].content.parts[0].text) {
+    if (res.ok && data && data.candidates && data.candidates[0].content.parts[0].text) {
       const reply = data.candidates[0].content.parts[0].text;
       
       addMsg('model', reply);
@@ -446,13 +472,15 @@ async function sendMessage() {
         parts: [{ text: reply }]
       });
     } else {
-      // تفصيل الخطأ في حال حدوث خلل بالاستجابة
-      console.error("Gemini API Error Detail:", data);
+      // طباعة تفاصيل الخطأ القادمة من السيرفر مباشرة في واجهة المستخدم
+      const errorMsg = data.error ? `${data.error.code} - ${data.error.message}` : JSON.stringify(data);
+      showDebug(`Google Server Response Error: ${errorMsg}`);
       addMsg('model', 'ERROR // استجابة غير صالحة من خادم جوجل العصبى.');
     }
 
   } catch (error) {
     document.getElementById('thinking-bubble')?.closest('.msg')?.remove();
+    showDebug(`Fetch Catch Exception: ${error.message}`);
     addMsg('model', 'ERROR // فشل في الاتصال بالشبكة الخارجية.');
   }
 }
