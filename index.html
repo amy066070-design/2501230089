@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Diacode Scholar — مجتمع الطلاب الأكاديمي السحابي</title>
+<title>Diacode Scholar — مجتمع الطلاب الأكاديمي</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Lalezar&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
@@ -95,13 +95,13 @@ p.lead{color:var(--dim);font-size:15px;margin:0 0 24px;line-height:1.7}
   <!-- 1. الرئيسية -->
   <section id="home" class="view active">
     <h1>مجتمع <em>دياكود</em> الأكاديمي</h1>
-    <p class="lead">منصة تواصل ذكية وآمنة مرتبطة سحابياً بمشروع ataa-maysan عبر Firebase الحديث.</p>
+    <p class="lead">منصة تواصل ذكية وآمنة لطلاب الجامعات والمطورين بنظام فائق السرعة.</p>
     
     <div class="post-box">
       <textarea id="postInput" placeholder="شارك فكرة، سؤالاً برمجياً، أو ملخصاً مع زملائك..."></textarea>
       <div class="post-footer">
-        <span class="badge" id="currentPosterID">الهوية: جاري الاتصال...</span>
-        <button class="btn" onclick="createPostCloud()">نشر سحابي</button>
+        <span class="badge" id="currentPosterID">الهوية: جاري التحميل...</span>
+        <button class="btn" onclick="createPost()">نشر للمجتمع</button>
       </div>
     </div>
 
@@ -135,15 +135,15 @@ p.lead{color:var(--dim);font-size:15px;margin:0 0 24px;line-height:1.7}
   <!-- 3. المساحات الحية -->
   <section id="spaces" class="view">
     <h1>المساحات الدراسية <em>الحية</em></h1>
-    <p class="lead">غرف نقاش تفاعلية سحابية فورية.</p>
+    <p class="lead">غرف نقاش تفاعلية فورية.</p>
     <div class="chat-container">
       <div style="padding:12px 16px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--line);font-weight:700">
-        💬 غرفة نقاش: هندسة الحاسبات وتطوير الويب (مزامنة حية)
+        💬 غرفة نقاش: هندسة الحاسبات وتطوير الويب
       </div>
       <div class="chat-messages" id="chatMessages"></div>
       <div class="chat-input-bar">
-        <input type="text" id="chatInput" placeholder="اكتب رسالتك للغرفة الحية..." onkeydown="if(event.key==='Enter') sendChatMessageCloud()">
-        <button class="btn" style="padding:8px 18px" onclick="sendChatMessageCloud()">إرسال</button>
+        <input type="text" id="chatInput" placeholder="اكتب رسالتك للغرفة الحية..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+        <button class="btn" style="padding:8px 18px" onclick="sendChatMessage()">إرسال</button>
       </div>
     </div>
   </section>
@@ -207,174 +207,141 @@ p.lead{color:var(--dim);font-size:15px;margin:0 0 24px;line-height:1.7}
   </section>
 </main>
 
-<!-- استيراد مكتبات Firebase الحديثة عبر ES Modules (طريقة الموديرن المناسبة لكودك) -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updatedoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyA1H_kXb3v8hVjh16kAu5YqERiexh6GdPk",
-    authDomain: "ataa-maysan.firebaseapp.com",
-    projectId: "ataa-maysan",
-    storageBucket: "ataa-maysan.firebasestorage.app",
-    messagingSenderId: "596899451653",
-    appId: "1:596899451653:web:232f36001c661bc70bdd6c",
-    measurementId: "G-XS3NPJYTB1"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const db = getFirestore(app);
-
-  const $ = id => document.getElementById(id);
-
-  window.switchView = function(id, event) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if(event && event.target) event.target.classList.add('active');
-  };
-
-  let userProfile = JSON.parse(localStorage.getItem('diacode_profile')) || {
-    name: "علي أحمد عبد الحسين زركي",
-    dept: "هندسة الحاسبات",
-    id: "DC-2026-" + Math.floor(10000 + Math.random() * 90000)
-  };
-
-  function initApp() {
-    $('profName').value = userProfile.name;
-    $('profDept').value = userProfile.dept;
-    $('profIDDisplay').textContent = userProfile.id;
-    $('currentPosterID').textContent = `الهوية: ${userProfile.name} (${userProfile.id})`;
-    listenToPosts();
-    listenToChat();
-  }
-
-  window.saveProfile = function() {
-    userProfile.name = $('profName').value;
-    userProfile.dept = $('profDept').value;
-    localStorage.setItem('diacode_profile', JSON.stringify(userProfile));
-    initApp();
-    alert('تم تحديث الملف الشخصي والهوية الرقمية بنجاح!');
-  };
-
-  // 1. النشر السحابي
-  window.createPostCloud = async function() {
-    const text = $('postInput').value.trim();
-    if(!text) return;
-    try {
-      await addDoc(collection(db, "posts"), {
-        author: `${userProfile.name} (${userProfile.dept})`,
-        id: userProfile.id,
-        text: text,
-        likes: 0,
-        createdAt: serverTimestamp()
-      });
-      $('postInput').value = '';
-    } catch(err) {
-      alert("خطأ في النشر: تأكد من تفعيل Firestore Rules في لوحة تحكم Firebase.");
-    }
-  };
-
-  let cachedPosts = [];
-  function listenToPosts() {
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-    onSnapshot(q, (snapshot) => {
-      cachedPosts = [];
-      snapshot.forEach((docSnap) => {
-        cachedPosts.push({ docId: docSnap.id, ...docSnap.data() });
-      });
-      renderFeed();
-    }, (error) => {
-      console.log("Firestore posts read error:", error);
-    });
-  }
-
-  function renderFeed(filter = "") {
-    const list = $('feedList');
-    list.innerHTML = "";
-    cachedPosts.filter(p => p.text.toLowerCase().includes(filter.toLowerCase()) || p.author.toLowerCase().includes(filter.toLowerCase())).forEach(p => {
-      const item = document.createElement('div');
-      item.className = 'feed-item';
-      item.innerHTML = `
-        <div class="feed-header">
-          <span class="feed-author">${p.author}</span>
-          <span class="feed-meta">${p.id}</span>
-        </div>
-        <p style="margin:0 0 10px;font-size:14px">${p.text}</p>
-        <div style="font-size:12px;color:var(--org)">❤️ إعجاب (${p.likes || 0})</div>
-      `;
-      list.appendChild(item);
-    });
-  }
-
-  window.filterFeed = function() {
-    renderFeed($('searchFeed').value);
-  };
-
-  // 2. الدردشة السحابية الحية
-  window.sendChatMessageCloud = async function() {
-    const input = $('chatInput');
-    const text = input.value.trim();
-    if(!text) return;
-    try {
-      await addDoc(collection(db, "chat_messages"), {
-        sender: `${userProfile.name} (${userProfile.id})`,
-        id: userProfile.id,
-        text: text,
-        createdAt: serverTimestamp()
-      });
-      input.value = '';
-    } catch(err) {
-      console.log("Chat error:", err);
-    }
-  };
-
-  function listenToChat() {
-    const box = $('chatMessages');
-    const q = query(collection(db, "chat_messages"), orderBy("createdAt", "asc"));
-    onSnapshot(q, (snapshot) => {
-      box.innerHTML = "";
-      snapshot.forEach((docSnap) => {
-        const m = docSnap.data();
-        const div = document.createElement('div');
-        const isMine = m.id === userProfile.id;
-        div.className = `chat-msg ${isMine ? 'mine' : ''}`;
-        div.innerHTML = `<div style="font-size:11px;color:var(--org);margin-bottom:2px">${m.sender}</div><div>${m.text}</div>`;
-        box.appendChild(div);
-      });
-      box.scrollTop = box.scrollHeight;
-    });
-  }
-
-  window.filterProjects = function() {
-    const q = $('searchProjects').value.toLowerCase();
-    document.querySelectorAll('#projectsGrid .card').forEach(card => {
-      card.style.display = card.innerHTML.toLowerCase().includes(q) ? 'block' : 'none';
-    });
-  };
-
-  window.filterLibrary = function() {
-    const q = $('searchLibrary').value.toLowerCase();
-    document.querySelectorAll('#libraryGrid .card').forEach(card => {
-      card.style.display = card.innerHTML.toLowerCase().includes(q) ? 'block' : 'none';
-    });
-  };
-
-  window.searchBuddy = function() {
-    const val = $('buddyQuery').value.trim();
-    const res = $('buddyResult');
-    if(!val) { res.textContent = "يرجى كتابة تخصص أو لغة للبحث."; return; }
-    res.innerHTML = `✅ تم العثور على زملاء مطابقين لـ (<b>${val}</b>) في تخصصك.`;
-  };
-
-  initApp();
-</script>
-
 <script>
+const $ = id => document.getElementById(id);
+
+function switchView(id, event) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(event && event.target) event.target.classList.add('active');
+}
+
+let userProfile = JSON.parse(localStorage.getItem('diacode_profile')) || {
+  name: "علي أحمد عبد الحسين زركي",
+  dept: "هندسة الحاسبات",
+  id: "DC-2026-" + Math.floor(10000 + Math.random() * 90000)
+};
+
+let posts = JSON.parse(localStorage.getItem('diacode_posts')) || [
+  { author: "علي أحمد (هندسة حاسبات)", id: "DC-2026-78912", text: "أهلاً بالجميع في مجتمع دياكود الأكاديمي على GitHub Pages 🚀", likes: 14 }
+];
+
+let chatMessages = JSON.parse(localStorage.getItem('diacode_chat')) || [
+  { sender: "نظام دياكود", id: "SYS", text: "مرحباً بكم في الغرفة الحية للمجتمع الأكاديمي." }
+];
+
+function initApp() {
+  $('profName').value = userProfile.name;
+  $('profDept').value = userProfile.dept;
+  $('profIDDisplay').textContent = userProfile.id;
+  $('currentPosterID').textContent = `الهوية: ${userProfile.name} (${userProfile.id})`;
+  renderFeed();
+  renderChat();
+}
+
+function saveProfile() {
+  userProfile.name = $('profName').value;
+  userProfile.dept = $('profDept').value;
+  localStorage.setItem('diacode_profile', JSON.stringify(userProfile));
+  initApp();
+  alert('تم تحديث الملف الشخصي والهوية الرقمية بنجاح!');
+}
+
+function createPost() {
+  const text = $('postInput').value.trim();
+  if(!text) return;
+  posts.unshift({
+    author: `${userProfile.name} (${userProfile.dept})`,
+    id: userProfile.id,
+    text: text,
+    likes: 0
+  });
+  localStorage.setItem('diacode_posts', JSON.stringify(posts));
+  $('postInput').value = '';
+  renderFeed();
+}
+
+function renderFeed(filter = "") {
+  const list = $('feedList');
+  list.innerHTML = "";
+  posts.filter(p => p.text.toLowerCase().includes(filter.toLowerCase()) || p.author.toLowerCase().includes(filter.toLowerCase())).forEach((p, index) => {
+    const item = document.createElement('div');
+    item.className = 'feed-item';
+    item.innerHTML = `
+      <div class="feed-header">
+        <span class="feed-author">${p.author}</span>
+        <span class="feed-meta">${p.id}</span>
+      </div>
+      <p style="margin:0 0 10px;font-size:14px">${p.text}</p>
+      <div style="font-size:12px;color:var(--org);cursor:pointer" onclick="likePost(${index})">❤️ إعجاب (${p.likes})</div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function likePost(index) {
+  posts[index].likes++;
+  localStorage.setItem('diacode_posts', JSON.stringify(posts));
+  renderFeed($('searchFeed').value);
+}
+
+function filterFeed() {
+  renderFeed($('searchFeed').value);
+}
+
+function sendChatMessage() {
+  const input = $('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  chatMessages.push({
+    sender: `${userProfile.name} (${userProfile.id})`,
+    id: userProfile.id,
+    text: text
+  });
+  localStorage.setItem('diacode_chat', JSON.stringify(chatMessages));
+  input.value = '';
+  renderChat();
+}
+
+function renderChat() {
+  const box = $('chatMessages');
+  box.innerHTML = "";
+  chatMessages.forEach(m => {
+    const div = document.createElement('div');
+    const isMine = m.id === userProfile.id;
+    div.className = `chat-msg ${isMine ? 'mine' : ''}`;
+    div.innerHTML = `<div style="font-size:11px;color:var(--org);margin-bottom:2px">${m.sender}</div><div>${m.text}</div>`;
+    box.appendChild(div);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+
+function filterProjects() {
+  const q = $('searchProjects').value.toLowerCase();
+  document.querySelectorAll('#projectsGrid .card').forEach(card => {
+    card.style.display = card.innerHTML.toLowerCase().includes(q) ? 'block' : 'none';
+  });
+}
+
+function filterLibrary() {
+  const q = $('searchLibrary').value.toLowerCase();
+  document.querySelectorAll('#libraryGrid .card').forEach(card => {
+    card.style.display = card.innerHTML.toLowerCase().includes(q) ? 'block' : 'none';
+  });
+}
+
+function searchBuddy() {
+  const val = $('buddyQuery').value.trim();
+  const res = $('buddyResult');
+  if(!val) { res.textContent = "يرجى كتابة تخصص أو لغة للبحث."; return; }
+  res.innerHTML = `✅ تم العثور على زملاء مطابقين لـ (<b>${val}</b>) في تخصصك.`;
+}
+
+initApp();
+
 // خلفية الكرة الأرضية ثلاثية الأبعاد (Three.js)
-const rd = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), alpha: true, antialias: true });
+const rd = new THREE.WebGLRenderer({ canvas: $('gl'), alpha: true, antialias: true });
 rd.setPixelRatio(Math.min(devicePixelRatio, 2));
 const sc = new THREE.Scene(), cam = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, .1, 100); cam.position.z = 5.5;
 const G = new THREE.Group(); sc.add(G);
